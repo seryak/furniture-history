@@ -13,7 +13,7 @@ class Furniture extends Model
     use HasFactory;
     protected $table = 'furnitures';
 
-    public function rooms()
+    public function rooms(): \Illuminate\Database\Eloquent\Relations\BelongsToMany
     {
         return $this->belongsToMany(Room::class)->withPivot(['in_time', 'out_time']);
     }

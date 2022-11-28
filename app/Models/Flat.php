@@ -9,7 +9,7 @@ class Flat extends Model
 {
     use HasFactory;
 
-    public function rooms()
+    public function rooms(): \Illuminate\Database\Eloquent\Relations\HasMany
     {
         return $this->hasMany(Room::class);
     }
