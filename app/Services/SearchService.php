@@ -25,7 +25,10 @@ class SearchService
         $historyMovementsRecords = DB::table('furniture_room')
             ->whereIn('room_id', $roomsIds)
             ->where('in_time', '<=', $time)
-            ->where('out_time', '=', null)
+            ->where(function ($query) use ($time) {
+                $query->where('out_time', '=', null)
+                    ->orWhere('out_time', '>=', $time);
+            })
             ->get();
 
         $furnitureIds = $historyMovementsRecords->pluck('furniture_id')->toArray();
