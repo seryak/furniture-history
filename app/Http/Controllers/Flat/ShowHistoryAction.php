@@ -5,14 +5,14 @@ namespace App\Http\Controllers\Flat;
 
 use App\Http\Controllers\Controller;
 use App\Services\SearchService;
+use Illuminate\Http\Response;
 
 
 class ShowHistoryAction extends Controller
 {
-    public function __invoke(int $flat_id, SearchService $search)
+    public function __invoke(int $flatId, SearchService $search)
     {
-        $search->searchAllFurnitureByFlat($flat_id);
-
-        return $search->results;
+        $search->searchAllFurnitureByFlat($flatId);
+        return response($search->results,Response::HTTP_OK);
     }
 }
