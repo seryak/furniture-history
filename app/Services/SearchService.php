@@ -13,24 +13,24 @@ class SearchService
 
     /**
      * Поиск мебели в комнатах на определенную дату
-     * @param int $flat_id
+     * @param int $flatId
      * @param string $time
-     * @param int|null $room_id
+     * @param int|null $roomId
      */
-    public function searchFurnitureByDate(int $flat_id, string $time, ?int $room_id): void
+    public function searchFurnitureByDate(int $flatId, string $time, ?int $roomId): void
     {
-        $flat = Flat::find($flat_id);
-        $rooms_id = $room_id ? [$room_id] : $flat->rooms->pluck('id')->toArray();
+        $flat = Flat::find($flatId);
+        $roomsIds = $roomId ? [$roomId] : $flat->rooms->pluck('id')->toArray();
 
         $historyMovementsRecords = DB::table('furniture_room')
-            ->whereIn('room_id', $rooms_id)
+            ->whereIn('room_id', $roomsIds)
             ->where('in_time', '<=', $time)
             ->where('out_time', '=', null)
             ->get();
 
-        $furniture_ids = $historyMovementsRecords->pluck('furniture_id')->toArray();
+        $furnitureIds = $historyMovementsRecords->pluck('furniture_id')->toArray();
 
-        $furnitures = Furniture::whereIn('id', $furniture_ids)->get()->keyBy('id');
+        $furnitures = Furniture::whereIn('id', $furnitureIds)->get()->keyBy('id');
 
         $this->results['flat'] = ['title' => $flat->address, 'count' => $flat->rooms()->count()];
 
@@ -50,18 +50,18 @@ class SearchService
 
     /**
      * Поиск всей мебели которая когда либо была в квартире
-     * @param int $flat_id
+     * @param int $flatId
      */
-    public function searchAllFurnitureByFlat(int $flat_id): void
+    public function searchAllFurnitureByFlat(int $flatId): void
     {
-        $flat = Flat::find($flat_id);
-        $rooms_id = $flat->rooms->pluck('id')->toArray();
+        $flat = Flat::find($flatId);
+        $roomsIds = $flat->rooms->pluck('id')->toArray();
 
         $this->results['flat'] = ['title' => $flat->address, 'count' => $flat->rooms()->count()];
 
         $this->results['history'] = DB::table('furniture_room')
             ->orderByDesc('in_time')
-            ->whereIn('room_id', $rooms_id)
+            ->whereIn('room_id', $roomsIds)
             ->leftJoin('furnitures', function ($join) {
                 $join->on('furnitures.id', '=', 'furniture_room.furniture_id');
             })

@@ -3,11 +3,8 @@
 
 namespace App\Http\Controllers\Flat;
 
-
 use App\Http\Controllers\Controller;
-use App\Models\Flat;
 use App\Services\SearchService;
-use Illuminate\Http\Request;
 
 
 class ShowHistoryAction extends Controller

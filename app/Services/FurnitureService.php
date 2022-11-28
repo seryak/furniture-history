@@ -17,16 +17,16 @@ class FurnitureService
 
     /**
      * Осуществляет перемещение мебели в указанную комнату
-     * @param $room_id
+     * @param $roomId
      */
-    public function moveToRoom($room_id): void
+    public function moveToRoom($roomId): void
     {
-        DB::transaction(function () use ($room_id) {
+        DB::transaction(function () use ($roomId) {
             $currentRoom = $this->furniture->currentRoom;
             $currentTime = Carbon::now();
 
             if ($currentRoom) {
-                if ($currentRoom->id == $room_id) {
+                if ($currentRoom->id == $roomId) {
                     throw new \ErrorException('Нельзя перемещать мебель в ту же самую комнату, где она находится сейчас');
                 }
 
@@ -40,7 +40,7 @@ class FurnitureService
                 // $this->furniture->currentRoom->pivot->update(['out_time' => Carbon::now()]);
             }
 
-            $this->furniture->rooms()->attach($room_id, ['in_time' => $currentTime]);
+            $this->furniture->rooms()->attach($roomId, ['in_time' => $currentTime]);
         });
     }
 }
